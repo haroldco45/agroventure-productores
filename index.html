@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Red de Productores de Arándano — Demo para Agroventure Capital</title>
+<meta name="description" content="Demo de Vibras Positivas HM: app para los productores que entregan arándano a la empacadora de Tocancipá. Entregas con lote y QR, calidad y liquidación, cuaderno de aplicaciones con carencias, cumplimiento ICA y panel de la empresa.">
+<meta name="theme-color" content="#0f2a22">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Red de Productores de Arándano — Demo">
+<meta property="og:description" content="Entregas con lote y QR, calidad y pagos, cuaderno de aplicaciones, cumplimiento ICA y panel de la empresa. Propuesta de Vibras Positivas HM.">
+<meta property="og:image" content="https://agroventure-productores.netlify.app/og-image.jpg">
+<meta property="og:url" content="https://agroventure-productores.netlify.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Red de Productores de Arándano — Demo">
+<meta name="twitter:description" content="La app para los productores que entregan arándano a la empacadora. Propuesta de Vibras Positivas HM.">
+<meta name="twitter:image" content="https://agroventure-productores.netlify.app/og-image.jpg">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="qr.js"></script>
+<style>
+:root{
+  --forest:#0f2a22;--forest2:#1b4335;--leaf:#2f8a57;--lime:#b7e4a1;--berry:#3c48b0;--bloom:#9fb0ff;
+  --amber:#c97c0e;--amber2:#fff1da;--red:#b8322a;--red2:#fde5e2;--ok2:#e3f4e8;
+  --bg:#f4f3ee;--card:#fff;--ink:#17201b;--mute:#5d665f;--line:#e2e2da;--soft:#eef0ea;
+  --r:18px;--shadow:0 10px 30px -14px rgba(15,42,34,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1612;--card:#13231c;--ink:#ecf3ee;--mute:#a3b2a8;--line:#24392f;--soft:#1a2d24;--ok2:#163322;--amber2:#33260f;--red2:#3a1614}}
+:root[data-theme="dark"]{--bg:#0b1612;--card:#13231c;--ink:#ecf3ee;--mute:#a3b2a8;--line:#24392f;--soft:#1a2d24;--ok2:#163322;--amber2:#33260f;--red2:#3a1614}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Manrope,system-ui,sans-serif;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.12;margin:0 0 .4em}
+h2{font-size:clamp(1.6rem,5vw,2.2rem)}h3{font-size:1.18rem}
+p{margin:.3em 0 .9em}a{color:var(--leaf)}img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.demo-bar{background:var(--amber);color:#fff;text-align:center;font-size:.78rem;font-weight:800;padding:6px 12px;letter-spacing:.02em}
+.top{position:sticky;top:0;z-index:30;background:rgba(15,42,34,.94);backdrop-filter:blur(10px);color:#fff}
+.top .wrap{display:flex;align-items:center;gap:10px;min-height:58px}
+.brand{font-family:Fraunces,serif;font-weight:800;font-size:1.08rem;line-height:1.1}
+.brand small{display:block;font-family:Manrope;font-weight:600;font-size:.7rem;color:var(--lime)}
+.sp{flex:1}
+.pill{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:6px 12px;font-weight:800;font-size:.8rem;cursor:pointer}
+.pill.on{background:#fff;color:var(--forest)}
+.hero{position:relative;min-height:400px;color:#fff;overflow:hidden;background:var(--forest)}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s;animation:kb 14s ease-in-out infinite alternate}
+.slides img.on{opacity:1}
+@keyframes kb{from{transform:scale(1.04)}to{transform:scale(1.16) translate(-2%,-2%)}}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,42,34,.2),rgba(15,42,34,.55) 45%,rgba(15,42,34,.97))}
+.hero .wrap{position:relative;z-index:2;padding-top:96px;padding-bottom:26px}
+.kicker{font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.hero h1{font-size:clamp(2rem,8vw,3.6rem);margin:.15em 0 .2em}
+.hero p{max-width:600px;color:#e6efe9}
+.ticker{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin-top:14px}
+.ticker::-webkit-scrollbar{display:none}
+.tk{flex:0 0 auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:10px 14px;min-width:130px}
+.tk b{display:block;font-family:Fraunces,serif;font-size:1.5rem;line-height:1.1}
+.tk span{font-size:.75rem;color:#cfe3d6}
+.view{display:none;animation:fade .4s}.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+section{padding:24px 0 6px}
+.sub{color:var(--mute);margin-top:-.2em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.grid{display:grid;gap:16px}@media(min-width:720px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+.kv div{background:var(--soft);border-radius:12px;padding:10px 12px}
+.kv span{display:block;font-size:.72rem;color:var(--mute);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.kv b{font-family:Fraunces,serif;font-size:1.3rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>*{flex:1 1 140px}
+label{display:block;font-size:.76rem;font-weight:800;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+input,select,textarea{width:100%;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg)}
+input:focus,select:focus{outline:none;border-color:var(--leaf)}
+.btn{background:var(--leaf);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.btn.ghost{background:transparent;color:var(--leaf);border:1.5px solid var(--leaf)}
+.btn.sm{padding:8px 12px;font-size:.85rem}
+.btn:active{transform:scale(.97)}
+.alert{border-left:6px solid var(--leaf);background:var(--ok2);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:.93rem}
+.alert.r{border-color:var(--amber);background:var(--amber2)}.alert.d{border-color:var(--red);background:var(--red2)}
+.alert b{display:block}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:99px;background:var(--soft);margin:2px 4px 2px 0}
+.tag.g{background:var(--ok2);color:var(--leaf)}.tag.a{background:var(--amber2);color:var(--amber)}.tag.d{background:var(--red2);color:var(--red)}
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
+.tbl th,.tbl td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.scroll{overflow-x:auto}
+.photo{border-radius:var(--r);overflow:hidden;position:relative;background:var(--forest)}
+.photo img{width:100%;height:210px;object-fit:cover}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 12px 10px;background:linear-gradient(transparent,rgba(5,20,14,.85));color:#fff;font-size:.78rem}
+figure{margin:0}
+.bar{height:12px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--lime));border-radius:99px;transition:width .9s}
+.lot{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.lot .row>*{flex:1 1 auto}
+.lot .qr{width:92px;height:92px;background:#fff;border-radius:10px;padding:4px}
+.lot .qr img,.lot .qr svg{width:100%;height:100%}
+.seg{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:6px 0 16px}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-weight:800;font-size:.85rem;cursor:pointer}
+.seg button.on{background:var(--forest);color:#fff;border-color:var(--forest)}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.chk .box{flex:0 0 24px;height:24px;border-radius:7px;border:2px solid var(--leaf);display:grid;place-items:center;margin-top:2px}
+.chk.on .box{background:var(--leaf)}
+.chk.on .box:after{content:"";width:10px;height:6px;border-left:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.chk small{display:block;color:var(--mute);font-size:.78rem}
+.big{font-family:Fraunces,serif;font-size:clamp(1.8rem,6vw,2.5rem);font-weight:800;line-height:1.05}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}.reveal.in{opacity:1;transform:none}
+nav.bot{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.bot .wrap{display:flex;padding:0 4px}
+nav.bot button{flex:1;border:0;background:none;padding:12px 2px 13px;font-weight:800;font-size:.74rem;color:var(--mute);cursor:pointer;position:relative}
+nav.bot button.on{color:var(--leaf)}
+nav.bot button.on:before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 4px 4px;background:var(--leaf)}
+.muted{color:var(--mute);font-size:.86rem}.note{font-size:.8rem;color:var(--mute);border-top:1px dashed var(--line);padding-top:8px;margin-top:10px}
+footer{padding:30px 0 20px;color:var(--mute);font-size:.82rem;text-align:center}
+footer b{color:var(--ink)}
+.toast{position:fixed;left:50%;top:76px;transform:translate(-50%,-20px);opacity:0;background:var(--forest);color:#fff;padding:10px 16px;border-radius:12px;z-index:60;transition:.3s;font-weight:700;font-size:.9rem;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.pulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:#58d68d;margin-right:6px;animation:pl 1.6s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(88,214,141,.7)}100%{box-shadow:0 0 0 12px rgba(88,214,141,0)}}
+.modal{position:fixed;inset:0;background:rgba(5,15,10,.6);z-index:70;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.modal .box2{background:var(--card);border-radius:22px 22px 0 0;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:20px 18px 28px}
+@media(min-width:700px){.modal{align-items:center}.modal .box2{border-radius:22px}}
+@media print{nav.bot,.top,.demo-bar,.hero,footer,.noprint{display:none!important}.view{display:none!important}#printArea{display:block!important}}
+#printArea{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="demo-bar" data-t="demoBar"></div>
+<header class="top"><div class="wrap">
+  <div class="brand"><span data-t="appName"></span><small id="prodLbl"></small></div>
+  <div class="sp"></div>
+  <button class="pill" id="btnEs">ES</button><button class="pill" id="btnEn">EN</button>
+</div></header>
+
+<main>
+  <div class="view on" id="v-inicio">
+    <div class="hero"><div class="slides" id="slides"></div>
+      <div class="wrap"><div class="kicker" id="heroDate"></div><h1 data-t="heroT"></h1><p data-t="heroP"></p><div class="ticker" id="ticker"></div></div>
+    </div>
+    <div class="wrap"><section id="inicioOut"></section></div>
+  </div>
+  <div class="view" id="v-entregas"><div class="wrap"><section id="entregasOut"></section></div></div>
+  <div class="view" id="v-calidad"><div class="wrap"><section id="calidadOut"></section></div></div>
+  <div class="view" id="v-ica"><div class="wrap"><section id="icaOut"></section></div></div>
+  <div class="view" id="v-panel"><div class="wrap"><section id="panelOut"></section></div></div>
+  <footer class="wrap"><p data-t="foot1"></p><p><b>Desarrollada por Vibras Positivas HM — Derechos de Autor Reservados</b><br><a href="https://vibraspositivashm.com" target="_blank" rel="noopener">vibraspositivashm.com</a></p></footer>
+</main>
+<div id="printArea"></div>
+<div class="modal" id="modal"><div class="box2" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+<nav class="bot"><div class="wrap">
+  <button data-v="inicio" class="on" data-t="nInicio"></button><button data-v="entregas" data-t="nEntregas"></button><button data-v="calidad" data-t="nCalidad"></button><button data-v="ica" data-t="nIca"></button><button data-v="panel" data-t="nPanel"></button>
+</div></nav>
+
+<script>
+const S={get(k,d){try{const v=localStorage.getItem('avp_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('avp_'+k,JSON.stringify(v))}catch(e){}}};
+let L=S.get('lang','es');const t=(es,en)=>L==='en'?en:es;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const nf=(n,d=0)=>isFinite(n)?Number(n).toLocaleString(L==='en'?'en-US':'es-CO',{maximumFractionDigits:d}):'—';
+const money=n=>isFinite(n)?'$'+nf(Math.round(n)):'—';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2200)}
+const bog=()=>new Date(new Date().toLocaleString('en-US',{timeZone:'America/Bogota'}));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>iso(bog());
+const addDays=(s,n)=>{const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return iso(d)};
+const diffDays=(a,b)=>Math.round((new Date(a+'T12:00:00')-new Date(b+'T12:00:00'))/864e5);
+const fdate=s=>new Date(s+'T12:00:00').toLocaleDateString(L==='en'?'en-US':'es-CO',{day:'numeric',month:'short',year:'numeric'});
+
+const UI={
+ demoBar:['DEMO · Propuesta de Vibras Positivas HM para Agroventure Capital · No es una app oficial · Datos de ejemplo','DEMO · Vibras Positivas HM proposal for Agroventure Capital · Not an official app · Sample data'],
+ appName:['Red de Productores','Grower Network'],
+ heroT:['Tu fruta, de la finca a la empacadora','Your fruit, from farm to packhouse'],
+ heroP:['La app para los productores que entregan arándano a la empacadora de Tocancipá: programa entregas con lote y QR, mira la calidad y lo que te van a pagar, y lleva al día lo que pide el ICA.','The app for growers delivering blueberries to the Tocancipá packhouse: schedule deliveries with lot and QR, see quality and what you’ll be paid, and keep ICA requirements up to date.'],
+ nInicio:['Inicio','Home'],nEntregas:['Entregas','Deliveries'],nCalidad:['Calidad y pago','Quality & pay'],nIca:['ICA y campo','ICA & field'],nPanel:['Panel empresa','Company'],
+ foot1:['Demo de Vibras Positivas HM preparada como propuesta para Agroventure Capital. No es una app oficial de Agroventure. Productores, precios y cifras de calidad son ficticios. Normas: Resolución ICA 824 de 2022.','Vibras Positivas HM demo prepared as a proposal for Agroventure Capital. Not an official Agroventure app. Growers, prices and quality figures are fictional. Rules: ICA Resolution 824 of 2022.']
+};
+function applyUI(){document.documentElement.lang=L;$$('[data-t]').forEach(e=>{const v=UI[e.dataset.t];if(v)e.textContent=v[L==='en'?1:0]});$('#btnEs').classList.toggle('on',L==='es');$('#btnEn').classList.toggle('on',L==='en')}
+
+/* ===== DEMO DATA (ficticio) ===== */
+function seed(){
+  if(S.get('seeded',false))return;
+  const td=today();
+  S.set('prod',{nombre:'Productor de ejemplo',finca:'Finca El Mirador (ejemplo)',municipio:'Guasca, Cundinamarca',alt:2750,ha:3,variedad:'Biloxi',plantas:9500,ica:'',asistente:'Ing. agrónomo de ejemplo',agua:addDays(td,-300),suelo:true});
+  const L0=[];const kg=[310,355,402,388,420,455];const ex=[78,81,84,80,86,88];
+  for(let i=0;i<6;i++){const f=addDays(td,-7*(6-i));L0.push({id:'L'+i,lote:'',fecha:f,kilos:kg[i],bandejas:Math.round(kg[i]/2),hora:'06:30',temp:14-i%3,estado:'recibida',rec:{kilos:kg[i]-4,exp:ex[i],causas:{blanda:4,calibre:5,partida:2,inmadura:2,deshid:1,mojada:0}}})}
+  L0.push({id:'L6',lote:'',fecha:addDays(td,3),kilos:470,bandejas:235,hora:'06:00',temp:'',estado:'programada'});
+  L0.forEach((x,i)=>x.lote=mkLote(x.fecha,i+1));
+  S.set('lotes',L0);
+  S.set('apps',[{id:1,fecha:addDays(td,-12),producto:'Fungicida para Botrytis (ejemplo)',ia:'Ingrediente de ejemplo',dosis:'1 L/ha',sector:'Lote 1',car:7,ica:true},{id:2,fecha:addDays(td,-1),producto:'Insecticida para trips (ejemplo)',ia:'Ingrediente de ejemplo',dosis:'0,5 L/ha',sector:'Lote 2',car:5,ica:true}]);
+  S.set('precios',{exp:12000,nac:6000,tarifa:1500});
+  S.set('ica',{});S.set('seeded',true);
+}
+function mkLote(f,n){return 'AVC-'+f.replace(/-/g,'').slice(2)+'-'+String(n).padStart(3,'0')}
+const NET=[ // red de ejemplo para el panel (ficticia)
+ ['Finca El Mirador (ejemplo)','Guasca',3,455,88],['La Esperanza (ejemplo)','Tocancipá',5,760,84],['Los Pinos (ejemplo)','Sesquilé',2,240,79],['San Isidro (ejemplo)','Chocontá',4,590,86],['Buenavista (ejemplo)','Villapinzón',6,880,82],['El Retiro (ejemplo)','Sopó',2.5,330,90],['La Cumbre (ejemplo)','Guatavita',3.5,410,77],['Santa Rita (ejemplo)','Ventaquemada',8,1150,85]
+];
+const CAUSAS=[['blanda',['Blanda','Soft']],['calibre',['Calibre menor a 10 mm','Under 10 mm']],['partida',['Partida','Split']],['inmadura',['Inmadura','Unripe']],['deshid',['Deshidratada','Dehydrated']],['mojada',['Mojada','Wet']]];
+
+/* ===== HERO ===== */
+const HERO=['img/cultivo-cubierto.jpg','img/cosecheros.jpg','img/racimo.jpg','img/huerto-otono.jpg','img/bayas.jpg'];let hi=0;
+function buildHero(){$('#slides').innerHTML=HERO.map((h,i)=>`<img src="${h}" alt="" class="${i?'':'on'}">`).join('')}
+setInterval(()=>{const im=$$('#slides img');if(!im.length)return;im[hi].classList.remove('on');hi=(hi+1)%im.length;im[hi].classList.add('on')},5200);
+
+/* ===== cálculos ===== */
+function lotes(){return S.get('lotes',[])}
+function liq(l){const P=S.get('precios',{});if(!l.rec)return null;const k=l.rec.kilos,e=k*l.rec.exp/100,n=k-e;return{exp:e,nac:n,total:e*P.exp+n*P.nac-k*P.tarifa}}
+function carenciaHasta(){const a=S.get('apps',[]);let max=null,who=null;a.forEach(x=>{const h=addDays(x.fecha,+x.car||0);if(!max||h>max){max=h;who=x}});return{max,who}}
+function nextIcaReport(){const d=bog(),m=[1,4,7,10];for(let y=d.getFullYear();y<=d.getFullYear()+1;y++)for(const mm of m){const c=new Date(y,mm,1);if(c>=new Date(d.getFullYear(),d.getMonth(),1)){return iso(c)}}}
+function aguaVence(){const p=S.get('prod',{});return p.agua?addDays(p.agua,365):null}
+
+/* ===== INICIO ===== */
+function renderInicio(){
+  const p=S.get('prod',{}),Ls=lotes(),rec=Ls.filter(x=>x.rec),td=today();
+  const mes=td.slice(0,7),recMes=rec.filter(x=>x.fecha.startsWith(mes));
+  const kMes=recMes.reduce((s,x)=>s+x.rec.kilos,0),payMes=recMes.reduce((s,x)=>s+liq(x).total,0);
+  const expAvg=rec.length?rec.reduce((s,x)=>s+x.rec.exp,0)/rec.length:NaN;
+  const prox=Ls.filter(x=>x.estado==='programada').sort((a,b)=>a.fecha.localeCompare(b.fecha))[0];
+  const car=carenciaHasta(),rep=nextIcaReport(),agua=aguaVence();
+  const al=[];
+  if(prox&&car.max&&car.max>prox.fecha)al.push(['d',t('Carencia: no puedes cosechar ese lote todavía','Pre‑harvest interval: you can’t pick that lot yet'),t(`La aplicación de "${car.who.producto}" tiene carencia hasta el ${fdate(car.max)} y la entrega ${prox.lote} está para el ${fdate(prox.fecha)}. Cambia la fecha o cosecha otro sector.`,`The "${car.who.producto}" spray has a pre‑harvest interval until ${fdate(car.max)} and delivery ${prox.lote} is set for ${fdate(prox.fecha)}. Change the date or pick another block.`)]);
+  else if(car.max&&car.max>=td)al.push(['r',t('Carencia activa','Active pre‑harvest interval'),t(`Hay producto aplicado con carencia hasta el ${fdate(car.max)}.`,`A product applied has a pre‑harvest interval until ${fdate(car.max)}.`)]);
+  const dr=diffDays(rep,td);al.push([dr<=10?'r':'',t('Informe trimestral al ICA','Quarterly ICA report'),t(`Se reporta en febrero, mayo, agosto y noviembre. El próximo mes de reporte empieza el ${fdate(rep)} (en ${dr} días).`,`Reported in February, May, August and November. The next reporting month starts ${fdate(rep)} (in ${dr} days).`)]);
+  if(agua){const da=diffDays(agua,td);al.push([da<0?'d':da<45?'r':'',t('Análisis microbiológico del agua','Microbiological water test'),da<0?t('Está vencido: hay que hacerlo ya (mínimo una vez al año).','Overdue: do it now (at least once a year).'):t(`Vence el ${fdate(agua)} (en ${da} días).`,`Expires ${fdate(agua)} (in ${da} days).`)])}
+  $('#inicioOut').innerHTML=`
+  <div class="card reveal"><div class="kicker" style="color:var(--leaf)">${t('Mi finca','My farm')}</div><h2 style="margin-bottom:.2em">${esc(p.finca)}</h2><p class="muted" style="margin:0">${esc(p.municipio)} · ${nf(p.alt)} m · ${nf(p.ha,1)} ha · ${esc(p.variedad)}</p>
+  <div class="kv"><div><span>${t('Kilos entregados este mes','Kilos delivered this month')}</span><b>${nf(kMes)}</b></div><div><span>${t('Exportable promedio','Average exportable')}</span><b>${nf(expAvg,1)}%</b></div><div><span>${t('Pago estimado del mes','Estimated pay this month')}</span><b>${money(payMes)}</b></div><div><span>${t('Próxima entrega','Next delivery')}</span><b style="font-size:1.05rem">${prox?fdate(prox.fecha):'—'}</b></div></div>
+  <div class="row noprint" style="margin-top:12px"><button class="btn" onclick="go('entregas');openNew()">${t('Programar una entrega','Schedule a delivery')}</button><button class="btn ghost" onclick="editProd()">${t('Datos de la finca','Farm details')}</button></div></div>
+  <h3>${t('Lo que tienes que mirar hoy','What to check today')}</h3>${al.map(a=>`<div class="alert ${a[0]}"><b>${a[1]}</b>${a[2]}</div>`).join('')}
+  <div class="grid g2" style="margin-top:14px">
+  <figure class="photo reveal"><img src="img/cosecha-hileras.jpg" alt=""><figcaption>${t('Cosecha en finca boyacense bajo cubierta','Harvest on a covered Boyacá farm')}</figcaption></figure>
+  <div class="card reveal" style="margin:0"><div class="kicker" style="color:var(--leaf)">${t('La empacadora','The packhouse')}</div><h3>${t('Tocancipá, Cundinamarca','Tocancipá, Cundinamarca')}</h3><p>${t('Agroventure anunció una empacadora para agosto de 2026 con capacidad para la fruta de hasta 500 hectáreas, abierta también a pequeños y medianos productores (Portal Frutícola, abril 2026).','Agroventure announced a packhouse for August 2026 sized for fruit from up to 500 hectares, also open to small and mid‑size growers (Portal Frutícola, April 2026).')}</p><div class="bar"><i style="width:${Math.min(100,NET.reduce((s,x)=>s+x[2],0)/500*100)}%"></i></div><p class="muted" style="margin-top:6px">${t('Red de ejemplo: ','Sample network: ')}${nf(NET.reduce((s,x)=>s+x[2],0),1)} ${t('de 500 ha de capacidad','of 500 ha capacity')}</p></div></div>`;
+  observe();
+}
+function editProd(){const p=S.get('prod',{});modal(`<h3>${t('Datos de la finca','Farm details')}</h3>
+  <div class="row"><div><label>${t('Productor','Grower')}</label><input id="pn" value="${esc(p.nombre)}"></div><div><label>${t('Finca','Farm')}</label><input id="pf" value="${esc(p.finca)}"></div></div>
+  <div class="row" style="margin-top:10px"><div><label>${t('Municipio','Town')}</label><input id="pm" value="${esc(p.municipio)}"></div><div><label>${t('Altura (m)','Altitude (m)')}</label><input id="pa" type="number" value="${p.alt}"></div></div>
+  <div class="row" style="margin-top:10px"><div><label>${t('Hectáreas','Hectares')}</label><input id="ph" type="number" step="0.1" value="${p.ha}"></div><div><label>${t('Variedad','Variety')}</label><input id="pv" value="${esc(p.variedad)}"></div><div><label>${t('Plantas','Plants')}</label><input id="pp" type="number" value="${p.plantas}"></div></div>
+  <div class="row" style="margin-top:10px"><div><label>${t('N.º registro ICA del predio','ICA farm registration no.')}</label><input id="pi" value="${esc(p.ica)}" placeholder="${t('9 dígitos','9 digits')}"></div><div><label>${t('Último análisis de agua','Last water test')}</label><input id="pw" type="date" value="${p.agua||''}"></div></div>
+  <div style="margin-top:10px"><label>${t('Asistente técnico','Technical adviser')}</label><input id="ps" value="${esc(p.asistente)}"></div>
+  <button class="btn" style="width:100%;margin-top:14px" onclick="saveProd()">${t('Guardar','Save')}</button>`)}
+function saveProd(){const p=S.get('prod',{});Object.assign(p,{nombre:$('#pn').value,finca:$('#pf').value,municipio:$('#pm').value,alt:+$('#pa').value,ha:+$('#ph').value,variedad:$('#pv').value,plantas:+$('#pp').value,ica:$('#pi').value,agua:$('#pw').value,asistente:$('#ps').value});S.set('prod',p);closeModal();renderAll();toast(t('Guardado','Saved'))}
+
+/* ===== ENTREGAS ===== */
+function renderEntregas(){
+  const Ls=lotes().slice().sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  $('#entregasOut').innerHTML=`<div class="kicker" style="color:var(--leaf)">${t('Entregas a la empacadora','Deliveries to the packhouse')}</div><h2>${t('Cada entrega es un lote con QR','Every delivery is a lot with a QR')}</h2><p class="sub">${t('El código QR viaja con las canastillas: dice de qué finca viene, cuándo se cosechó y a qué temperatura salió. Eso es la trazabilidad que piden la empacadora y el exportador.','The QR code travels with the crates: farm, harvest time and dispatch temperature. That is the traceability the packhouse and exporter require.')}</p>
+  <button class="btn noprint" style="width:100%;margin-bottom:14px" onclick="openNew()">${t('Programar una entrega','Schedule a delivery')}</button>
+  <div class="card">${Ls.map(l=>`<div class="lot"><div><b style="font-family:Fraunces,serif;font-size:1.1rem">${l.lote}</b> <span class="tag ${l.estado==='recibida'?'g':'a'}">${l.estado==='recibida'?t('Recibida','Received'):t('Programada','Scheduled')}</span>
+  <div class="muted">${fdate(l.fecha)} · ${t('cosecha','picked')} ${l.hora} · ${nf(l.kilos)} kg · ${nf(l.bandejas)} ${t('bandejas','trays')}${l.temp!==''?` · ${t('pulpa','pulp')} ${l.temp} °C`:''}</div>
+  ${l.rec?`<div style="margin-top:6px"><span class="tag g">${nf(l.rec.exp)}% ${t('exportable','exportable')}</span><span class="tag">${money(liq(l).total)}</span></div>`:''}
+  <div class="row noprint" style="margin-top:8px"><button class="btn sm ghost" onclick="remision('${l.id}')">${t('Remisión','Delivery note')}</button>${l.estado==='programada'?`<button class="btn sm ghost" onclick="recibir('${l.id}')">${t('Simular recepción','Simulate receipt')}</button>`:''}<button class="btn sm ghost" onclick="share('${l.id}')">WhatsApp</button></div></div>
+  <div class="qr" id="qr-${l.id}"></div></div>`).join('')}</div>
+  <p class="note">${t('Resolución ICA 824 de 2022: el productor debe guardar copia de las remisiones de transporte hacia la empacadora, y la empacadora y el exportador deben tener un sistema de trazabilidad verificable.','ICA Resolution 824 of 2022: growers must keep copies of transport notes to the packhouse, and packhouses and exporters must run a verifiable traceability system.')}</p>`;
+  Ls.forEach(l=>drawQR('qr-'+l.id,qrText(l)));
+}
+function qrText(l){const p=S.get('prod',{});return `LOTE ${l.lote}\nFinca: ${p.finca}\nMunicipio: ${p.municipio}\nICA: ${p.ica||'-'}\nVariedad: ${p.variedad}\nCosecha: ${l.fecha} ${l.hora}\nKilos: ${l.kilos}\nTemp pulpa: ${l.temp===''?'-':l.temp+' C'}`}
+function drawQR(id,txt){const el=document.getElementById(id);if(!el||typeof qrcode!=='function')return;try{const q=qrcode(0,'M');q.addData(unescape(encodeURIComponent(txt)));q.make();el.innerHTML=q.createSvgTag({cellSize:3,margin:2,scalable:true})}catch(e){}}
+function openNew(){const td=today(),car=carenciaHasta();modal(`<h3>${t('Programar una entrega','Schedule a delivery')}</h3>
+  <div class="row"><div><label>${t('Fecha de cosecha y entrega','Harvest & delivery date')}</label><input id="nf" type="date" value="${addDays(td,1)}"></div><div><label>${t('Hora de cosecha','Picking time')}</label><input id="nh" type="time" value="06:00"></div></div>
+  <div class="row" style="margin-top:10px"><div><label>${t('Kilos estimados','Estimated kilos')}</label><input id="nk" type="number" value="400"></div><div><label>${t('Temperatura de pulpa al despachar (°C)','Pulp temp at dispatch (°C)')}</label><input id="nt" type="number" step="0.1" placeholder="12"></div></div>
+  <div id="ncar" style="margin-top:10px"></div>
+  <p class="muted">${t('Se calcula una bandeja de unos 2 kg. La entrega queda con su número de lote y su código QR.','About 2 kg per tray. The delivery gets its lot number and QR code.')}</p>
+  <button class="btn" style="width:100%" onclick="saveNew()">${t('Crear lote','Create lot')}</button>`);
+  const chk=()=>{const f=$('#nf').value;$('#ncar').innerHTML=car.max&&car.max>f?`<div class="alert d"><b>${t('Ojo con la carencia','Watch the pre‑harvest interval')}</b>${t(`"${esc(car.who.producto)}" tiene carencia hasta el ${fdate(car.max)}. Esa fruta no se puede cosechar todavía.`,`"${esc(car.who.producto)}" has a pre‑harvest interval until ${fdate(car.max)}. That fruit can’t be picked yet.`)}</div>`:`<div class="alert"><b>${t('Sin carencias pendientes para esa fecha','No pending intervals for that date')}</b>${t('Según el cuaderno de aplicaciones.','Per the spray log.')}</div>`};
+  $('#nf').oninput=chk;chk();
+}
+function saveNew(){const Ls=lotes(),f=$('#nf').value,k=+$('#nk').value||0;const n=Ls.length+1;Ls.push({id:'L'+Date.now(),lote:mkLote(f,n),fecha:f,kilos:k,bandejas:Math.ceil(k/2),hora:$('#nh').value,temp:$('#nt').value,estado:'programada'});S.set('lotes',Ls);closeModal();renderAll();toast(t('Lote creado','Lot created'))}
+function recibir(id){const l=lotes().find(x=>x.id===id);modal(`<h3>${t('Recepción en la empacadora','Packhouse receipt')} · ${l.lote}</h3><p class="muted">${t('En la app real esto lo llena la empacadora. Aquí lo simulas para ver cómo le llega al productor.','In the real app the packhouse fills this in. Here you simulate it to see what the grower gets.')}</p>
+  <div class="row"><div><label>${t('Kilos recibidos','Kilos received')}</label><input id="rk" type="number" value="${l.kilos}"></div><div><label>${t('% exportable','% exportable')}</label><input id="re" type="number" value="84"></div></div>
+  <label style="margin-top:10px">${t('Descarte por causa (% del total)','Rejects by cause (% of total)')}</label><div class="row">${CAUSAS.map(c=>`<div style="flex:1 1 120px"><label style="text-transform:none;letter-spacing:0">${t(c[1][0],c[1][1])}</label><input id="rc-${c[0]}" type="number" value="${{blanda:5,calibre:5,partida:2,inmadura:2,deshid:1,mojada:1}[c[0]]}"></div>`).join('')}</div>
+  <button class="btn" style="width:100%;margin-top:14px" onclick="saveRec('${id}')">${t('Registrar recepción','Record receipt')}</button>`)}
+function saveRec(id){const Ls=lotes(),l=Ls.find(x=>x.id===id);const c={};CAUSAS.forEach(k=>c[k[0]]=+$('#rc-'+k[0]).value||0);l.rec={kilos:+$('#rk').value,exp:+$('#re').value,causas:c};l.estado='recibida';S.set('lotes',Ls);closeModal();renderAll();toast(t('Recepción registrada','Receipt recorded'))}
+function remision(id){const l=lotes().find(x=>x.id===id),p=S.get('prod',{});$('#printArea').innerHTML=`<div style="font-family:Manrope,sans-serif;padding:24px;max-width:700px"><h2 style="font-family:Fraunces,serif">${t('Remisión de transporte','Transport note')} · ${l.lote}</h2><p>${t('Demo · Red de Productores · Propuesta de Vibras Positivas HM','Demo · Grower Network · Vibras Positivas HM proposal')}</p><table class="tbl"><tr><td>${t('Finca','Farm')}</td><td><b>${esc(p.finca)}</b></td></tr><tr><td>${t('Productor','Grower')}</td><td>${esc(p.nombre)}</td></tr><tr><td>${t('Municipio','Town')}</td><td>${esc(p.municipio)}</td></tr><tr><td>${t('Registro ICA','ICA reg.')}</td><td>${esc(p.ica||'—')}</td></tr><tr><td>${t('Fecha y hora de cosecha','Harvest date & time')}</td><td>${fdate(l.fecha)} ${l.hora}</td></tr><tr><td>Kilos</td><td>${nf(l.kilos)}</td></tr><tr><td>${t('Bandejas','Trays')}</td><td>${nf(l.bandejas)}</td></tr><tr><td>${t('Temperatura de pulpa','Pulp temperature')}</td><td>${l.temp===''?'—':l.temp+' °C'}</td></tr><tr><td>${t('Destino','Destination')}</td><td>${t('Empacadora Tocancipá','Tocancipá packhouse')}</td></tr></table><div id="qrp" style="width:180px;margin-top:16px"></div><p style="margin-top:30px">${t('Firma conductor','Driver signature')}: ______________________ &nbsp; ${t('Firma productor','Grower signature')}: ______________________</p></div>`;drawQR('qrp',qrText(l));setTimeout(()=>window.print(),300)}
+function share(id){const l=lotes().find(x=>x.id===id);const txt=qrText(l)+(l.rec?`\n${t('Exportable','Exportable')}: ${l.rec.exp}%\n${t('Pago estimado','Estimated pay')}: ${money(liq(l).total)}`:'');window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank')}
+
+/* ===== CALIDAD Y PAGO ===== */
+function renderCalidad(){
+  const P=S.get('precios',{}),rec=lotes().filter(x=>x.rec).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const tot=rec.reduce((s,x)=>{const q=liq(x);s.k+=x.rec.kilos;s.e+=q.exp;s.p+=q.total;return s},{k:0,e:0,p:0});
+  const cs={};CAUSAS.forEach(c=>cs[c[0]]=rec.length?rec.reduce((s,x)=>s+(x.rec.causas[c[0]]||0),0)/rec.length:0);
+  const W=640,H=230,p=26,bw=(W-p*2)/Math.max(rec.length,1);
+  const bars=rec.map((x,i)=>{const h=x.rec.exp/100*(H-70);return `<rect x="${p+i*bw+8}" y="${H-36-h}" width="${bw-16}" height="${h}" rx="7" fill="${x.rec.exp>=85?'var(--leaf)':x.rec.exp>=80?'#7cc08f':'var(--amber)'}"><animate attributeName="height" from="0" to="${h}" dur=".9s"/><animate attributeName="y" from="${H-36}" to="${H-36-h}" dur=".9s"/></rect><text x="${p+i*bw+bw/2}" y="${H-42-h}" font-size="24" font-weight="800" text-anchor="middle" fill="currentColor">${x.rec.exp}%</text><text x="${p+i*bw+bw/2}" y="${H-10}" font-size="19" text-anchor="middle" fill="currentColor">${new Date(x.fecha+'T12:00').toLocaleDateString(L==='en'?'en-US':'es-CO',{day:'numeric',month:'short'})}</text>`}).join('');
+  const worst=Object.entries(cs).sort((a,b)=>b[1]-a[1])[0];
+  const tip={blanda:t('Fruta blanda: cosecha temprano en la mañana, saca rápido al frío y no te pases de nitrógeno.','Soft fruit: pick early in the morning, cool fast and don’t overdo nitrogen.'),calibre:t('Calibre pequeño: revisa poda, polinización (abejas o abejorros) y riego.','Small size: check pruning, pollination (bees or bumblebees) and irrigation.'),partida:t('Fruta partida: riego parejo y no pasarse de potasio.','Split fruit: even watering and no excess potassium.'),inmadura:t('Fruta inmadura: cosecha solo la azul pareja y capacita a los cosecheros.','Unripe fruit: pick only evenly blue fruit and train pickers.'),deshid:t('Deshidratada: sombra en campo y enfriar en menos de 2 horas.','Dehydrated: field shade and cool within 2 hours.'),mojada:t('Mojada: no cosechar con rocío ni lluvia.','Wet: don’t pick with dew or rain.')}[worst[0]];
+  $('#calidadOut').innerHTML=`<div class="kicker" style="color:var(--leaf)">${t('Calidad y pago','Quality & pay')}</div><h2>${t('Lo que llega, lo que se exporta y lo que te pagan','What arrives, what is exported and what you get paid')}</h2>
+  <div class="card reveal"><div class="kv"><div><span>${t('Kilos recibidos','Kilos received')}</span><b>${nf(tot.k)}</b></div><div><span>${t('Kilos exportables','Exportable kilos')}</span><b>${nf(tot.e)}</b></div><div><span>${t('Exportable total','Total exportable')}</span><b>${nf(tot.e/tot.k*100,1)}%</b></div><div><span>${t('Pago estimado','Estimated pay')}</span><b>${money(tot.p)}</b></div></div></div>
+  <div class="card reveal"><h3>${t('% exportable por entrega','% exportable per delivery')}</h3><svg viewBox="0 0 ${W} ${H}" style="width:100%;color:var(--mute)">${bars}</svg></div>
+  <div class="card reveal"><h3>${t('¿Por qué se descarta tu fruta?','Why is your fruit rejected?')}</h3>${CAUSAS.map(c=>`<div style="margin:8px 0"><div class="row" style="flex-wrap:nowrap;justify-content:space-between"><b style="flex:1">${t(c[1][0],c[1][1])}</b><span style="flex:0 0 auto">${nf(cs[c[0]],1)}%</span></div><div class="bar"><i style="width:${cs[c[0]]/12*100}%;${c[0]===worst[0]?'background:var(--amber)':''}"></i></div></div>`).join('')}
+  <div class="alert r" style="margin-top:12px"><b>${t('Tu principal causa','Your main cause')}: ${t(CAUSAS.find(c=>c[0]===worst[0])[1][0],CAUSAS.find(c=>c[0]===worst[0])[1][1])}</b>${tip}</div></div>
+  <div class="card reveal"><h3>${t('Liquidación por lote','Settlement per lot')}</h3>${rec.slice().reverse().map(x=>{const q=liq(x);return `<div style="display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)"><div><b>${x.lote}</b><div class="muted">${fdate(x.fecha)} · ${nf(x.rec.kilos)} kg · ${nf(q.exp)} ${t('export','export')} · ${nf(q.nac)} ${t('nacional','domestic')}</div></div><b style="font-family:Fraunces,serif;font-size:1.1rem;white-space:nowrap">${money(q.total)}</b></div>`}).join('')}
+  <div class="row" style="margin-top:12px"><div><label>${t('Precio exportable $/kg','Export price $/kg')}</label><input type="number" data-p="exp" value="${P.exp}"></div><div><label>${t('Precio nacional $/kg','Domestic price $/kg')}</label><input type="number" data-p="nac" value="${P.nac}"></div><div><label>${t('Tarifa de empaque $/kg','Packing fee $/kg')}</label><input type="number" data-p="tarifa" value="${P.tarifa}"></div></div>
+  <p class="note">${t('Precios y tarifas FICTICIOS para la demo. En la app real los define Agroventure en su contrato con cada productor.','FICTIONAL prices and fees for the demo. In the real app Agroventure sets them in each grower’s contract.')}</p></div>`;
+  $$('[data-p]').forEach(e=>e.onchange=()=>{const P=S.get('precios',{});P[e.dataset.p]=+e.value;S.set('precios',P);renderAll()});
+  observe();
+}
+
+/* ===== ICA Y CAMPO ===== */
+const ICA_ITEMS=[
+ ['reg','Registro ICA del lugar de producción vigente','ICA production site registration in force','Res. 824/2022, art. 5 y 9'],
+ ['uso','Certificado de uso de suelo','Land‑use certificate','Art. 13.1.1'],
+ ['asis','Asistencia técnica permanente con agrónomo','Permanent agronomist technical assistance','Art. 13.1.4'],
+ ['trim','Informe trimestral al ICA (feb., may., ago., nov.) con monitoreo de plagas','Quarterly ICA report (Feb, May, Aug, Nov) with pest monitoring','Art. 13.1.6'],
+ ['agua','Análisis microbiológico del agua, mínimo una vez al año','Microbiological water test, at least yearly','Art. 13.1.17'],
+ ['plag','Solo plaguicidas con registro ICA','Only ICA‑registered pesticides','Art. 13.1.18'],
+ ['regs','Registros de aplicaciones, monitoreo de plagas y labores','Records of sprays, pest monitoring and field work','Art. 13.1.19'],
+ ['rem','Copias de las remisiones de transporte a la empacadora','Copies of transport notes to the packhouse','Art. 13.1.14'],
+ ['lmr','Cumplir los límites máximos de residuos que informa el exportador','Meet maximum residue limits set by the exporter','Art. 13.1.13'],
+ ['inf','Áreas de acopio, bodega de insumos y dosificación de plaguicidas','Collection, input storage and pesticide mixing areas','Art. 5']
+];
+function renderIca(){
+  const st=S.get('ica',{}),p=S.get('prod',{}),A=S.get('apps',[]).slice().sort((a,b)=>b.fecha.localeCompare(a.fecha)),td=today();
+  const auto={agua:p.agua&&aguaVence()>=td,regs:A.length>0,rem:lotes().length>0,plag:A.length>0&&A.every(a=>a.ica)};
+  const done=ICA_ITEMS.filter(i=>st[i[0]]||auto[i[0]]).length;
+  $('#icaOut').innerHTML=`<div class="kicker" style="color:var(--leaf)">${t('ICA y campo','ICA & field')}</div><h2>${t('Al día con el ICA para exportar','ICA‑ready to export')}</h2><p class="sub">${t('Lo que pide la Resolución ICA 824 de 2022 al lugar de producción que vende fruta fresca para exportación.','What ICA Resolution 824 of 2022 requires from production sites selling fresh fruit for export.')}</p>
+  <div class="card"><div class="row" style="align-items:center"><div><div class="big">${Math.round(done/ICA_ITEMS.length*100)}%</div><div class="muted">${done} ${t('de','of')} ${ICA_ITEMS.length} ${t('requisitos','requirements')}</div></div><div style="flex:2 1 200px"><div class="bar"><i style="width:${done/ICA_ITEMS.length*100}%"></i></div></div></div>
+  ${ICA_ITEMS.map(i=>{const a=auto[i[0]];const on=st[i[0]]||a;return `<div class="chk ${on?'on':''}" data-i="${i[0]}"><div class="box"></div><div>${t(i[1],i[2])}<small>${i[3]}${a?' · '+t('se marca solo con tus registros','auto‑checked from your records'):''}</small></div></div>`}).join('')}</div>
+  <div class="card"><h3>${t('Cuaderno de aplicaciones','Spray log')}</h3><p class="muted">${t('Cada aplicación queda con su carencia. La app no deja programar cosecha de un lote que todavía está en carencia.','Each spray carries its pre‑harvest interval. The app warns before scheduling a harvest still under interval.')}</p>
+  ${A.map(a=>{const h=addDays(a.fecha,+a.car||0),act=h>=td;return `<div class="lot" style="grid-template-columns:1fr"><div><b>${esc(a.producto)}</b> <span class="tag ${act?'a':'g'}">${act?t('Carencia hasta ','Interval until ')+fdate(h):t('Libre para cosechar','Clear to harvest')}</span><div class="muted">${fdate(a.fecha)} · ${esc(a.ia)} · ${esc(a.dosis)} · ${esc(a.sector)} · ${t('carencia','interval')} ${a.car} ${t('días','days')}${a.ica?' · '+t('registro ICA','ICA registered'):''}</div></div></div>`}).join('')}
+  <button class="btn ghost" style="width:100%;margin-top:12px" onclick="newApp()">${t('Anotar una aplicación','Log a spray')}</button></div>`;
+  $$('#icaOut .chk').forEach(c=>c.onclick=()=>{if(auto[c.dataset.i])return toast(t('Este se marca con tus registros','This one comes from your records'));const s=S.get('ica',{});s[c.dataset.i]=!s[c.dataset.i];S.set('ica',s);renderIca()});
+}
+function newApp(){modal(`<h3>${t('Anotar una aplicación','Log a spray')}</h3>
+  <div class="row"><div><label>${t('Fecha','Date')}</label><input id="af" type="date" value="${today()}"></div><div><label>${t('Sector o lote','Block')}</label><input id="as" value="Lote 1"></div></div>
+  <div style="margin-top:10px"><label>${t('Producto comercial','Product')}</label><input id="ap"></div>
+  <div class="row" style="margin-top:10px"><div><label>${t('Ingrediente activo','Active ingredient')}</label><input id="ai"></div><div><label>${t('Dosis','Rate')}</label><input id="ad"></div><div><label>${t('Carencia (días)','Interval (days)')}</label><input id="ac" type="number" value="7"></div></div>
+  <label style="margin-top:12px;display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:.9rem"><input id="ar" type="checkbox" checked style="width:auto"> ${t('Tiene registro ICA','ICA registered')}</label>
+  <button class="btn" style="width:100%;margin-top:14px" onclick="saveApp()">${t('Guardar','Save')}</button>`)}
+function saveApp(){if(!$('#ap').value.trim())return toast(t('Escribe el producto','Enter the product'));const A=S.get('apps',[]);A.push({id:Date.now(),fecha:$('#af').value,producto:$('#ap').value,ia:$('#ai').value,dosis:$('#ad').value,sector:$('#as').value,car:+$('#ac').value||0,ica:$('#ar').checked});S.set('apps',A);closeModal();renderAll();toast(t('Aplicación anotada','Spray logged'))}
+
+/* ===== PANEL EMPRESA ===== */
+function renderPanel(){
+  const ha=NET.reduce((s,x)=>s+x[2],0),kg=NET.reduce((s,x)=>s+x[3],0),ex=NET.reduce((s,x)=>s+x[3]*x[4],0)/kg;
+  const weeks=[2900,3300,3650,3900,4150,4380,4600,4815];const W=640,H=230,p=24,bw=(W-p*2)/weeks.length,mx=6000;
+  const bars=weeks.map((v,i)=>{const h=v/mx*(H-70);return `<rect x="${p+i*bw+8}" y="${H-36-h}" width="${bw-16}" height="${h}" rx="7" fill="${i===weeks.length-1?'var(--forest2)':'var(--leaf)'}"><animate attributeName="height" from="0" to="${h}" dur=".9s"/><animate attributeName="y" from="${H-36}" to="${H-36-h}" dur=".9s"/></rect><text x="${p+i*bw+bw/2}" y="${H-42-h}" font-size="21" font-weight="800" text-anchor="middle" fill="currentColor">${nf(v/1000,1)}</text><text x="${p+i*bw+bw/2}" y="${H-10}" font-size="19" text-anchor="middle" fill="currentColor">${t('S','W')}${i+1}</text>`}).join('');
+  const sorted=NET.slice().sort((a,b)=>b[4]-a[4]);
+  $('#panelOut').innerHTML=`<div class="kicker" style="color:var(--leaf)"><span class="pulse"></span>${t('Vista de Agroventure','Agroventure view')}</div><h2>${t('Toda la red en una pantalla','The whole network on one screen')}</h2><p class="sub">${t('Lo que vería la gerencia: cuánta fruta viene, de dónde, con qué calidad y cuánto de la empacadora se está usando. Datos de ejemplo.','What management would see: how much fruit is coming, from where, at what quality and how much packhouse capacity is used. Sample data.')}</p>
+  <div class="card reveal"><div class="kv"><div><span>${t('Productores','Growers')}</span><b>${NET.length}</b></div><div><span>${t('Hectáreas en la red','Network hectares')}</span><b>${nf(ha,1)}</b></div><div><span>${t('Kilos esta semana','Kilos this week')}</span><b>${nf(kg)}</b></div><div><span>${t('Exportable ponderado','Weighted exportable')}</span><b>${nf(ex,1)}%</b></div></div>
+  <p style="margin:14px 0 6px"><b>${t('Uso de la capacidad de la empacadora (500 ha)','Packhouse capacity use (500 ha)')}</b></p><div class="bar"><i style="width:${ha/500*100}%"></i></div><p class="muted" style="margin-top:6px">${nf(ha/500*100,1)}% · ${t('espacio para','room for')} ${nf(500-ha)} ${t('ha más de productores aliados','more ha of partner growers')}</p></div>
+  <div class="card reveal"><h3>${t('Fruta recibida por semana (toneladas)','Fruit received per week (tonnes)')}</h3><svg viewBox="0 0 ${W} ${H}" style="width:100%;color:var(--mute)">${bars}</svg></div>
+  <div class="card reveal"><h3>${t('Ranking de calidad','Quality ranking')}</h3>${sorted.map((x,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)"><div><b>${i+1}. ${x[0]}</b><div class="muted">${x[1]} · ${nf(x[2],1)} ha · ${nf(x[3])} ${t('kg/semana','kg/week')}</div></div><span class="tag ${x[4]>=85?'g':x[4]>=80?'':'a'}" style="font-size:.9rem">${x[4]}%</span></div>`).join('')}</div>
+  <div class="grid g2"><div class="card reveal"><h3>${t('Alertas de la red','Network alerts')}</h3><div class="alert r"><b>${t('2 fincas por debajo de 80% exportable','2 farms below 80% exportable')}</b>${t('Visita técnica sugerida: Los Pinos y La Cumbre (ejemplo).','Suggested technical visit: Los Pinos and La Cumbre (sample).')}</div><div class="alert"><b>${t('Informe trimestral ICA','Quarterly ICA report')}</b>${t('El próximo mes de reporte empieza el ','The next reporting month starts ')}${fdate(nextIcaReport())}.</div></div>
+  <div class="card reveal"><h3>${t('Lo que gana Agroventure','What Agroventure gains')}</h3><ul style="margin:0;padding-left:18px"><li>${t('Trazabilidad lote por lote para exportadores y compradores.','Lot‑by‑lot traceability for exporters and buyers.')}</li><li>${t('Planear la empacadora con los kilos programados de toda la red.','Plan the packhouse with scheduled kilos from the whole network.')}</li><li>${t('Productores alineados con el ICA y las buenas prácticas.','Growers aligned with ICA and good practices.')}</li><li>${t('Reportes en español e inglés para inversionistas.','Spanish and English reports for investors.')}</li></ul></div></div>`;
+  observe();
+}
+
+/* ===== infra ===== */
+function modal(h){$('#modalBox').innerHTML=h+`<button class="btn ghost" style="width:100%;margin-top:10px" onclick="closeModal()">${t('Cerrar','Close')}</button>`;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+function go(v){$$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));$$('nav.bot button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));window.scrollTo({top:0,behavior:'smooth'});S.set('view',v);observe()}
+$$('nav.bot button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+let io;function observe(){if(!('IntersectionObserver'in window)){$$('.reveal').forEach(e=>e.classList.add('in'));return}io=io||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.06});$$('.reveal:not(.in)').forEach(e=>io.observe(e))}
+function renderHero(){const d=bog();$('#heroDate').textContent=d.toLocaleDateString(L==='en'?'en-US':'es-CO',{weekday:'long',day:'numeric',month:'long'})+' · '+d.toLocaleTimeString(L==='en'?'en-US':'es-CO',{hour:'2-digit',minute:'2-digit'})+' (Bogotá)';
+  const p=S.get('prod',{});$('#prodLbl').textContent=p.finca||'';
+  const rec=lotes().filter(x=>x.rec);const tk=[[nf(lotes().length),t('lotes con QR','lots with QR')],[nf(rec.reduce((s,x)=>s+x.rec.kilos,0)),t('kilos entregados','kilos delivered')],['500 ha',t('capacidad empacadora','packhouse capacity')],['824/2022',t('Resolución ICA','ICA Resolution')]];
+  $('#ticker').innerHTML=tk.map(x=>`<div class="tk"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}
+function renderAll(){applyUI();renderHero();renderInicio();renderEntregas();renderCalidad();renderIca();renderPanel()}
+$('#btnEs').onclick=()=>{L='es';S.set('lang',L);renderAll()};$('#btnEn').onclick=()=>{L='en';S.set('lang',L);renderAll()};
+setInterval(renderHero,60000);
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+seed();buildHero();renderAll();go(S.get('view','inicio'));
+</script>
+</body>
+</html>
