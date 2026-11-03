@@ -1,5 +1,5 @@
 // Red de Productores (demo) — service worker · Vibras Positivas HM
-const CACHE='avp-v1';
+const CACHE='avp-v2';
 const CORE=['./','./index.html','./manifest.json','./qr.js','./icon-192.png','./icon-512.png','./og-image.jpg','./img/bayas.jpg','./img/bolsas-sustrato.jpg','./img/calidad-fresco.jpg','./img/cosecha-hileras.jpg','./img/cosecheros.jpg','./img/cultivo-cubierto.jpg','./img/floracion.jpg','./img/huerto-otono.jpg','./img/huerto-verde.jpg','./img/mano-cosecha.jpg','./img/racimo.jpg','./img/racimo2.jpg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
